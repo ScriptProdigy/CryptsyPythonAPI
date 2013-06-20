@@ -10,22 +10,25 @@ class Cryptsy:
         self.Secret = Secret
 
     def api_query(self, method, req={}):
-        if(method=="marketdata" or method=="orderdata"):
-            ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api.php?method=' + method))
-            return json.loads(ret.read())
-        else:
-            req['method'] = method
-            req['nonce'] = int(time.time())
-            post_data = urllib.urlencode(req)
-
-            sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
-            headers = {
-                'Sign': sign,
-                'Key': self.APIKey
-            }
-
-            ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api', post_data, headers))
-            return json.loads(ret.read())
+        try:
+            if(method=="marketdata" or method=="orderdata"):
+                ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api.php?method=' + method))
+                return json.loads(ret.read())
+            else:
+                req['method'] = method
+                req['nonce'] = int(time.time())
+                post_data = urllib.urlencode(req)
+    
+                sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
+                headers = {
+                    'Sign': sign,
+                    'Key': self.APIKey
+                }
+    
+                ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api', post_data, headers))
+                return json.loads(ret.read())
+        except:
+            return None
 
     def getMarketData(self):
         return self.api_query("marketdata")
