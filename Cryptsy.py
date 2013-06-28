@@ -10,25 +10,22 @@ class Cryptsy:
         self.Secret = Secret
 
     def api_query(self, method, req={}):
-        try:
-            if(method=="marketdata" or method=="orderdata"):
-                ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api.php?method=' + method))
-                return json.loads(ret.read())
-            else:
-                req['method'] = method
-                req['nonce'] = int(time.time())
-                post_data = urllib.urlencode(req)
-    
-                sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
-                headers = {
-                    'Sign': sign,
-                    'Key': self.APIKey
-                }
-    
-                ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api', post_data, headers))
-                return json.loads(ret.read())
-        except:
-            return None
+        if(method=="marketdata" or method=="orderdata"):
+            ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api.php?method=' + method))
+            return json.loads(ret.read())
+        else:
+            req['method'] = method
+            req['nonce'] = int(time.time())
+            post_data = urllib.urlencode(req)
+
+            sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
+            headers = {
+                'Sign': sign,
+                'Key': self.APIKey
+            }
+
+            ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api', post_data, headers))
+            return json.loads(ret.read())
 
     def getMarketData(self):
         return self.api_query("marketdata")
@@ -170,6 +167,20 @@ class Cryptsy:
     def cancelOrder(self, orderid):
         return self.api_query('cancelorder', {'orderid': orderid})
 
+
+    # Inputs:
+    # marketid    Market ID for which you would like to cancel all open orders
+    ##
+    # Outputs: 
+    # return  Array for return information on each order cancelled
+    def cancelMarketOrders(self, marketid):
+        return self.api_query('cancelmarketorders', {'marketid': marketid})
+
+
+    # Outputs: 
+    # return  Array for return information on each order cancelled
+    def cancelAllOrders(self):
+        return self.api_query('cancelallorders')
 
     # Inputs:
     # ordertype   Order type you are calculating for (Buy/Sell)
