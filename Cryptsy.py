@@ -26,8 +26,12 @@ class Cryptsy:
         return after
 
     def api_query(self, method, req={}):
-        if(method=="marketdata" or method=="orderdata"):
-            ret = urllib2.urlopen(urllib2.Request('https://www.cryptsy.com/api.php?method=' + method))
+
+        if(method == "marketdata" or method == "orderdata" or method == "marketdatav2"):
+            ret = urllib2.urlopen(urllib2.Request('http://pubapi.cryptsy.com/api.php?method=' + method))
+            return json.loads(ret.read())
+        elif(method == "singlemarketdata" or method == "singleorderdata"):
+            ret = urllib2.urlopen(urllib2.Request('http://pubapi.cryptsy.com/api.php?method=' + method + '&marketid=' + str(marketid)))
             return json.loads(ret.read())
         else:
             req['method'] = method
@@ -47,8 +51,16 @@ class Cryptsy:
     def getMarketData(self):
         return self.api_query("marketdata")
 
-    def getOrderData(self):
-        return self.api_query("orderdata")
+    def getMarketDataV2(self):
+        return self.api_query("marketdatav2")
+
+    def getSingleMarketData(self, marketid):
+        return self.api_query("singlemarketdata", {'marketid': marketid})
+
+    def getOrderbookData(self, marketid=None):
+        if(marketid == None):
+            return self.api_query("orderdata")
+        return self.api_query("singleorderdata", {'marketid': marketid})
 
     # Outputs: 
     # balances_available  Array of currencies and the balances availalbe for each
@@ -153,6 +165,27 @@ class Cryptsy:
         return self.api_query('myorders', {'marketid': marketid})
 
 
+    # Inputs:
+    # marketid    Market ID for which you are querying
+    ##
+    # Outputs: Array of buy and sell orders on the market representing market depth. 
+    # Output Format is:
+    # array(
+    #   'sell'=>array(
+    #     array(price,quantity), 
+    #     array(price,quantity),
+    #     ....
+    #   ), 
+    #   'buy'=>array(
+    #     array(price,quantity), 
+    #     array(price,quantity),
+    #     ....
+    #   )
+    # )
+    def depth(self, marketid):
+        return self.api_query('depth', {'marketid': marketid})
+
+
     # Outputs: Array of all open orders for your account. 
     # orderid Order ID for this order
     # marketid    The Market ID this order was created for
@@ -209,3 +242,21 @@ class Cryptsy:
     # net The net total with fees
     def calculateFees(self, ordertype, quantity, price):
         return self.api_query('calculatefees', {'ordertype': ordertype, 'quantity': quantity, 'price': price})
+
+
+    # Inputs: (either currencyid OR currencycode required - you do not have to supply both)
+    # currencyid  Currency ID for the coin you want to generate a new address for (ie. 3 = BitCoin)
+    # currencycode    Currency Code for the coin you want to generate a new address for (ie. BTC = BitCoin)
+    ##
+    # Outputs: 
+    # address The new generated address
+    def generateNewAddress(self, currencyid=None, currencycode=None):
+
+        if(currencyid != None):
+            req = {'currencyid': currencyid}
+        elif(currencycode != None):
+            req = {'currencycode': currencycode}
+        else:
+            return None
+
+        return self.api_query('generatenewaddress', req)
