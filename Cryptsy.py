@@ -16,12 +16,13 @@ class Cryptsy:
         after = before
 
         # Add timestamps if there isnt one but is a datetime
-        if(isinstance(after['return'], list)):
-            for x in xrange(0, len(after['return'])):
-                if(isinstance(after['return'][x], dict)):
-                    if('datetime' in after['return'][x] and 'timestamp' not in after['return'][x]):
-                        after['return'][x]['timestamp'] = float(createTimeStamp(after['return'][x]['datetime']))
-                        
+        if('return' in after):
+            if(isinstance(after['return'], list)):
+                for x in xrange(0, len(after['return'])):
+                    if(isinstance(after['return'][x], dict)):
+                        if('datetime' in after['return'][x] and 'timestamp' not in after['return'][x]):
+                            after['return'][x]['timestamp'] = float(createTimeStamp(after['return'][x]['datetime']))
+                            
         return after
 
     def api_query(self, method, req={}):
