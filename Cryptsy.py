@@ -31,7 +31,7 @@ class Cryptsy:
             ret = urllib2.urlopen(urllib2.Request('http://pubapi.cryptsy.com/api.php?method=' + method))
             return json.loads(ret.read())
         elif(method == "singlemarketdata" or method == "singleorderdata"):
-            ret = urllib2.urlopen(urllib2.Request('http://pubapi.cryptsy.com/api.php?method=' + method + '&marketid=' + str(marketid)))
+            ret = urllib2.urlopen(urllib2.Request('http://pubapi.cryptsy.com/api.php?method=' + method + '&marketid=' + str(req['marketid'])))
             return json.loads(ret.read())
         else:
             req['method'] = method
