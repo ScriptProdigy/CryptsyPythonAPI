@@ -86,6 +86,21 @@ class Cryptsy:
     # low_trade   24 hour lowest trade price in this market
     def getMarkets(self):
         return self.api_query('getmarkets')
+        
+    #Outputs: Array of Wallet Statuses
+    #currencyid Integer value representing a currency
+    #name	Name for this currency, for example: Bitcoin
+    #code	Currency code, for example: BTC
+    #blockcount	Blockcount of currency hot wallet as of lastupdate time
+    #difficulty	Difficulty of currency hot wallet as of lastupdate time
+    #version	Version of currency hotwallet as of lastupdate time
+    #peercount	Connected peers of currency hot wallet as of lastupdate time
+    #hashrate	Network hashrate of currency hot wallet as of lastupdate time
+    #gitrepo	Git Repo URL for this currency
+    #withdrawalfee	Fee charged for withdrawals of this currency
+    #lastupdate	Datetime (EST) the hot wallet information was last updated
+    def getWalletStatus(self):
+        return self.api_query('getwalletstatus')
 
 
     # Outputs: Array of Deposits and Withdrawals on your account 
