@@ -22,7 +22,7 @@ class Cryptsy:
                     if(isinstance(after['return'][x], dict)):
                         if('datetime' in after['return'][x] and 'timestamp' not in after['return'][x]):
                             after['return'][x]['timestamp'] = float(createTimeStamp(after['return'][x]['datetime']))
-                            
+
         return after
 
     def api_query(self, method, req={}):
@@ -62,7 +62,7 @@ class Cryptsy:
             return self.api_query("orderdata")
         return self.api_query("singleorderdata", {'marketid': marketid})
 
-    # Outputs: 
+    # Outputs:
     # balances_available  Array of currencies and the balances availalbe for each
     # balances_hold   Array of currencies and the amounts currently on hold for open orders
     # servertimestamp Current server timestamp
@@ -73,7 +73,7 @@ class Cryptsy:
         return self.api_query('getinfo')
 
 
-    # Outputs: Array of Active Markets 
+    # Outputs: Array of Active Markets
     # marketid    Integer value representing a market
     # label   Name for this market, for example: AMC/BTC
     # primary_currency_code   Primary currency code, for example: AMC
@@ -86,7 +86,7 @@ class Cryptsy:
     # low_trade   24 hour lowest trade price in this market
     def getMarkets(self):
         return self.api_query('getmarkets')
-        
+
     #Outputs: Array of Wallet Statuses
     #currencyid Integer value representing a currency
     #name	Name for this currency, for example: Bitcoin
@@ -103,7 +103,7 @@ class Cryptsy:
         return self.api_query('getwalletstatus')
 
 
-    # Outputs: Array of Deposits and Withdrawals on your account 
+    # Outputs: Array of Deposits and Withdrawals on your account
     # currency    Name of currency account
     # timestamp   The timestamp the activity posted
     # datetime    The datetime the activity posted
@@ -118,7 +118,7 @@ class Cryptsy:
     # Inputs:
     # marketid    Market ID for which you are querying
     ##
-    # Outputs: Array of last 1000 Trades for this Market, in Date Decending Order 
+    # Outputs: Array of last 1000 Trades for this Market, in Date Decending Order
     # datetime    Server datetime trade occurred
     # tradeprice  The price the trade occurred at
     # quantity    Quantity traded
@@ -130,7 +130,7 @@ class Cryptsy:
     # Inputs:
     # marketid    Market ID for which you are querying
     ##
-    # Outputs: 2 Arrays. First array is sellorders listing current open sell orders ordered price ascending. Second array is buyorders listing current open buy orders ordered price descending. 
+    # Outputs: 2 Arrays. First array is sellorders listing current open sell orders ordered price ascending. Second array is buyorders listing current open buy orders ordered price descending.
     # sellprice   If a sell order, price which order is selling at
     # buyprice    If a buy order, price the order is buying at
     # quantity    Quantity on order
@@ -143,7 +143,7 @@ class Cryptsy:
     # marketid    Market ID for which you are querying
     # limit   (optional) Limit the number of results. Default: 200
     ##
-    # Outputs: Array your Trades for this Market, in Date Decending Order 
+    # Outputs: Array your Trades for this Market, in Date Decending Order
     # tradeid An integer identifier for this trade
     # tradetype   Type of trade (Buy/Sell)
     # datetime    Server datetime trade occurred
@@ -154,7 +154,7 @@ class Cryptsy:
         return self.api_query('mytrades', {'marketid': marketid, 'limit': limit})
 
 
-    # Outputs: Array your Trades for all Markets, in Date Decending Order 
+    # Outputs: Array your Trades for all Markets, in Date Decending Order
     # tradeid An integer identifier for this trade
     # tradetype   Type of trade (Buy/Sell)
     # datetime    Server datetime trade occurred
@@ -169,7 +169,7 @@ class Cryptsy:
     # Inputs:
     # marketid    Market ID for which you are querying
     ##
-    # Outputs: Array of your orders for this market listing your current open sell and buy orders. 
+    # Outputs: Array of your orders for this market listing your current open sell and buy orders.
     # orderid Order ID for this order
     # created Datetime the order was created
     # ordertype   Type of order (Buy/Sell)
@@ -183,16 +183,16 @@ class Cryptsy:
     # Inputs:
     # marketid    Market ID for which you are querying
     ##
-    # Outputs: Array of buy and sell orders on the market representing market depth. 
+    # Outputs: Array of buy and sell orders on the market representing market depth.
     # Output Format is:
     # array(
     #   'sell'=>array(
-    #     array(price,quantity), 
+    #     array(price,quantity),
     #     array(price,quantity),
     #     ....
-    #   ), 
+    #   ),
     #   'buy'=>array(
-    #     array(price,quantity), 
+    #     array(price,quantity),
     #     array(price,quantity),
     #     ....
     #   )
@@ -201,7 +201,7 @@ class Cryptsy:
         return self.api_query('depth', {'marketid': marketid})
 
 
-    # Outputs: Array of all open orders for your account. 
+    # Outputs: Array of all open orders for your account.
     # orderid Order ID for this order
     # marketid    The Market ID this order was created for
     # created Datetime the order was created
@@ -219,16 +219,16 @@ class Cryptsy:
     # quantity    Amount of units you are buying/selling in this order
     # price   Price per unit you are buying/selling at
     ##
-    # Outputs: 
+    # Outputs:
     # orderid If successful, the Order ID for the order which was created
     def createOrder(self, marketid, ordertype, quantity, price):
         return self.api_query('createorder', {'marketid': marketid, 'ordertype': ordertype, 'quantity': quantity, 'price': price})
-    
+
 
     # Inputs:
     # orderid Order ID for which you would like to cancel
     ##
-    # Outputs: If successful, it will return a success code. 
+    # Outputs: If successful, it will return a success code.
     def cancelOrder(self, orderid):
         return self.api_query('cancelorder', {'orderid': orderid})
 
@@ -236,13 +236,13 @@ class Cryptsy:
     # Inputs:
     # marketid    Market ID for which you would like to cancel all open orders
     ##
-    # Outputs: 
+    # Outputs:
     # return  Array for return information on each order cancelled
     def cancelMarketOrders(self, marketid):
         return self.api_query('cancelmarketorders', {'marketid': marketid})
 
 
-    # Outputs: 
+    # Outputs:
     # return  Array for return information on each order cancelled
     def cancelAllOrders(self):
         return self.api_query('cancelallorders')
@@ -252,7 +252,7 @@ class Cryptsy:
     # quantity    Amount of units you are buying/selling
     # price   Price per unit you are buying/selling at
     ##
-    # Outputs: 
+    # Outputs:
     # fee The that would be charged for provided inputs
     # net The net total with fees
     def calculateFees(self, ordertype, quantity, price):
@@ -263,7 +263,7 @@ class Cryptsy:
     # currencyid  Currency ID for the coin you want to generate a new address for (ie. 3 = BitCoin)
     # currencycode    Currency Code for the coin you want to generate a new address for (ie. BTC = BitCoin)
     ##
-    # Outputs: 
+    # Outputs:
     # address The new generated address
     def generateNewAddress(self, currencyid=None, currencycode=None):
 
@@ -275,3 +275,17 @@ class Cryptsy:
             return None
 
         return self.api_query('generatenewaddress', req)
+
+
+    # Inputs:
+    # orderid	Order ID for which you are querying
+    ##
+    # Outputs: tradeinfo is a list of all the trades that have occured in your order. Where orderinfo shows realtime status of the order. Orderinfo contains the 'active'; a boolean object showing if the order is still open. Orderinfo also contains 'remainqty' which shows the quantity left in your order.
+    # tradeinfo	A list of all trades that have occuried in your order.
+    # orderinfo	Information regarding status of the order. Contains 'active' and 'remainqty' keys.
+
+    def getOrderStatus(self, orderid):
+        return self.api_query('getorderstatus', {'orderid': orderid})
+
+    def getCoinData(self):
+        return self.api_query('getcoindata')
