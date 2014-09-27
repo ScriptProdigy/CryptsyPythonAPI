@@ -9,8 +9,8 @@ def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
 
 class Cryptsy:
     def __init__(self, APIKey, Secret):
-        self.APIKey = APIKey
-        self.Secret = Secret
+        self.APIKey = str(APIKey)
+        self.Secret = str(Secret)
 
     def post_process(self, before):
         after = before
